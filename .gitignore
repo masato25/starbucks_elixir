@@ -1,0 +1,5 @@
+/_build
+/deps
+/starbucks
+erl_crash.dump
+*.ez
