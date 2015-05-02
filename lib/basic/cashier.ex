@@ -1,4 +1,4 @@
-defmodule Cashier do
+defmodule Basic.Cashier do
 
   @name :cashier
 

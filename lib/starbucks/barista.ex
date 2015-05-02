@@ -1,11 +1,11 @@
-defmodule Cashier do
+defmodule Barista do
 
-  @name :cashier
+  @name :barista
 
   def start do
     pid = spawn(__MODULE__, :loop, [])
     :global.register_name(@name, pid)
-    IO.puts("Cashier: ")
+    IO.puts("Barista: ")
     IO.inspect(pid)
   end
 
@@ -20,15 +20,16 @@ defmodule Cashier do
 
   def loop do
     receive do
+
       {:new_order, customer_pid} ->
         IO.puts("got new order")
         :timer.sleep 3000
         send customer_pid, { :request_payment, myid}
         loop
-      {:paymoney, _customer_pid, name } ->
+      {:paymoney, _customer_pid } ->
         IO.puts("customer paid")
-        Queue.push(name, %Queue.Struct{name: name})
         loop
+
     end
   end
 
