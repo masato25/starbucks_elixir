@@ -2,7 +2,7 @@ defmodule Queue do
   use GenServer
 
   def start_link(myqueue) do
-    GenServer.start_link(__MODULE__, myqueue, name: __MODULE__)
+    GenServer.start_link(__MODULE__, myqueue,name: __MODULE__)
   end
 
   def status do
@@ -13,9 +13,6 @@ defmodule Queue do
     GenServer.cast __MODULE__, {:push,name,order}
   end
 
-  # def pop do
-  #   GenServer.call __MODULE__, :pop
-  # end
   def update(name,action) do
     GenServer.cast __MODULE__, {:update,name,action}
   end
@@ -33,9 +30,11 @@ defmodule Queue do
     cond do
       action == :orderdone ->
         new_myqueue = Dict.update(myqueue, name , action, fn value -> Map.put(value,:orderdone,true) end)
+        checkisdone(new_myqueue,name)
         {:noreply, new_myqueue}
       action == :paid ->
         new_myqueue = Dict.update(myqueue, name , action, fn value -> Map.put(value,:paid,true) end)
+        checkisdone(new_myqueue,name)
         {:noreply, new_myqueue}
       true ->
         #no match action do noting
@@ -43,12 +42,15 @@ defmodule Queue do
     end
   end
 
-  # def handle_call(:pop, _from, myqueue) do
-  #   if myqueue == [] do
-  #     {:reply, myqueue, myqueue}
-  #   else
-  #     [_item | newqueue] = myqueue
-  #     {:reply, newqueue, newqueue}
-  #   end
-  # end
+  def myid(name) do
+    :global.whereis_name(name)
+  end
+
+  def checkisdone(queue,name) do
+      order = Dict.get(queue, name)
+      if order.paid == true && order.orderdone == true do
+        send myid(name), {:coffee_ready, name}
+      end
+  end
+
 end

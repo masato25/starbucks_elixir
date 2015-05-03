@@ -27,7 +27,7 @@ defmodule Basic.Cashier do
         loop
       {:paymoney, _customer_pid, name } ->
         IO.puts("customer paid")
-        Queue.push(name, %Queue.Struct{name: name})
+        Queue.push(name, %Order.Struct{name: name})
         loop
     end
   end

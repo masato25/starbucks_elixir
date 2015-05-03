@@ -14,20 +14,22 @@ defmodule Cashier do
     :global.unregister_name(@name)
   end
 
-  def myid do
-    :global.whereis_name(@name)
+  def myid(name \\ @name) do
+    :global.whereis_name(name)
   end
 
   def loop do
     receive do
-      {:new_order, customer_pid} ->
-        IO.puts("got new order")
+      {:new_order, customer_name } ->
+        IO.puts("Cashier: got new order")
         :timer.sleep 3000
-        send customer_pid, { :request_payment, myid}
+        Queue.push(customer_name, %Order.Struct{name: customer_name})
+        Barista.addcup(customer_name)
+        send myid(customer_name), { :request_payment, @name}
         loop
-      {:paymoney, _customer_pid, name } ->
-        IO.puts("customer paid")
-        Queue.push(name, %Queue.Struct{name: name})
+      {:paymoney, customer_name } ->
+        IO.puts("Cashier: customer paid (#{customer_name})")
+        Queue.update(customer_name,:paid)
         loop
     end
   end
