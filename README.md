@@ -25,4 +25,9 @@ StarbucksElixir.start
 Customer.want_coffee(masato1)
 ```
 
+#check order
+```elisir
+Queue.status
+```
+
 ** TODO: Add description **
