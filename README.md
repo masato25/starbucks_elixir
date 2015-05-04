@@ -1,7 +1,12 @@
 StarbucksElixir
 ===============
 
-#start all!
+#geting start
+```elixir
+cd starbucks_elixir
+iex -S mix
+```
+#start all
 ```elixir
 StarbucksElixir.start
 ```
