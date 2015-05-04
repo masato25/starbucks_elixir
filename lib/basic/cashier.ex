@@ -21,7 +21,7 @@ defmodule Basic.Cashier do
   def loop do
     receive do
       {:new_order, customer_pid} ->
-        IO.puts("got new order")
+        IO.puts("Got new order")
         :timer.sleep 3000
         send customer_pid, { :request_payment, myid}
         loop

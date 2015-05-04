@@ -21,14 +21,14 @@ defmodule Cashier do
   def loop do
     receive do
       {:new_order, customer_name } ->
-        IO.puts("Cashier: got new order")
+        IO.puts("Cashier: Got new order, write down coustomer name on cup - #{customer_name}. ")
         :timer.sleep 3000
         Queue.push(customer_name, %Order.Struct{name: customer_name})
         Barista.addcup(customer_name)
         send myid(customer_name), { :request_payment, @name}
         loop
       {:paymoney, customer_name } ->
-        IO.puts("Cashier: customer paid (#{customer_name})")
+        IO.puts("Cashier: Customer paid (#{customer_name})")
         Queue.update(customer_name,:paid)
         loop
     end

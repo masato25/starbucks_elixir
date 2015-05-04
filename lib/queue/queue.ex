@@ -17,6 +17,10 @@ defmodule Queue do
     GenServer.cast __MODULE__, {:update,name,action}
   end
 
+  def delete(name) do
+    GenServer.cast __MODULE__, {:delete,name}
+  end
+
   def handle_call(:status, _from, myqueue) do
     {:reply, myqueue, myqueue}
   end
@@ -42,6 +46,11 @@ defmodule Queue do
     end
   end
 
+  def handle_cast({:delete, name}, myqueue) do
+    newqueue = Dict.drop(myqueue,[name])
+    {:noreply, newqueue}
+  end
+
   def myid(name) do
     :global.whereis_name(name)
   end
@@ -49,6 +58,7 @@ defmodule Queue do
   def checkisdone(queue,name) do
       order = Dict.get(queue, name)
       if order.paid == true && order.orderdone == true do
+        delete(name)
         send myid(name), {:coffee_ready, name}
       end
   end

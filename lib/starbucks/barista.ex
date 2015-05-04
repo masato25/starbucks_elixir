@@ -40,6 +40,7 @@ defmodule Barista do
       {:make_coffee, name} ->
         IO.puts("Basrista: start to make coffee for (#{name})")
         :timer.sleep 5000
+        IO.puts("Basrista: #{name}'s coffee is ready!")
         Queue.update(name,:orderdone)
         loop
     after

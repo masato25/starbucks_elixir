@@ -34,7 +34,7 @@ defmodule Customer do
         loop(name)
       { :coffee_ready, _name} ->
         IO.puts("Customer(#{name}): got coffee")
-        stop(name)
+        loop(name)
     end
 
   end
